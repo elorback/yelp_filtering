@@ -22,7 +22,7 @@ router.post('/populate', async (req, res) => {
         }
       })
       .on('end', () => {
-        console.log('Database populated successfully');
+          console.log('Database populated successfully');
         res.send('Database populated successfully');
       });
   } catch (error) {
