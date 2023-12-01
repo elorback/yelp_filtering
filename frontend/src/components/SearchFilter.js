@@ -38,9 +38,8 @@ useEffect(()=>{
 },[])
 
 return (
-<>
-
-
-</>  )
+<Container style={{display:'flex', alignItems:'center';}}>
+{}
+</Container>  )
 }
 export default SearchFilter;
