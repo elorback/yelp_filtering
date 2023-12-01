@@ -6,7 +6,7 @@ const populateRoute = require('./routes/populateDB');
 const dataFilter = require('./routes/dataFilter');
 
 const app = express();
-const PORT = 3000;
+const PORT = 8000;
 
 // Middleware for parsing JSON
 app.use(cors());

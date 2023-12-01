@@ -4,14 +4,23 @@ const { Op } = require('sequelize');
 
 const router = express.Router();
 
-router.get('/getParams', async (req, res) => {
+router.get('/filterdata', async (req, res) => {
   try {
     const filterAttributes = req.query;
     const whereClause = {
-      [Op.and]: Object.entries(filterAttributes).map(([key, value]) => ({
-        [key]: value,
-      })),
+      [Op.and]: [],
     };
+
+    // Build the whereClause based on the provided parameters
+    Object.entries(filterAttributes).forEach(([key, value]) => {
+      // Check if the value is not empty or null
+      if (value !== '' && value !== null) {
+        // If the key is 'categories', use the $in operator
+        const condition = key === 'categories' ? { [key]: { [Op.in]: value.split(',') } } : { [key]: value };
+        whereClause[Op.and].push(condition);
+      }
+    });
+    
 
     const filteredData = await YelpModel.findAll({
       where: whereClause,
