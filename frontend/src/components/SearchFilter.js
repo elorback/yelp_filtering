@@ -38,7 +38,7 @@ useEffect(()=>{
 },[])
 
 return (
-<Container style={{display:'flex', alignItems:'center';}}>
+<Container style={{display:'flex', alignItems:'center'}}>
 {}
 </Container>  )
 }
