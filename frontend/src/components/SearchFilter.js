@@ -9,7 +9,7 @@ const [zipCode,setZipCode] = useState([]);
 const [stars,setStars] = useState([]);
 const [city,setCity] = useState([]);
 
-const fetchData = async () =>{
+const fetchfilteredData = async () =>{
   try{
    const response = await fetch(`http://localhost:8000/api/filterdata`);
 
@@ -34,7 +34,7 @@ const fetchData = async () =>{
 };
 
 useEffect(()=>{
-  fetchData();
+  fetchfilteredData();
 },[])
 
 return (
