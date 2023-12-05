@@ -49,8 +49,9 @@ const YelpModel = sequelize.define('YelpModel', {
     allowNull: true,
   },
   categories: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(512),
     allowNull: true,
+    
     
   },
 }, {

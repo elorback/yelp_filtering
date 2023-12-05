@@ -7,7 +7,7 @@ router.get('/fetchdata', async (req,res)=>{
 try{
 
     const allData = await YelpModel.findAll();
-    res.send({data:allDatadata});
+    res.send({data:allData});
 
 }catch(err){
     console.error(err);
