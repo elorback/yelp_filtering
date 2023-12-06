@@ -3,15 +3,16 @@ import { Table, Container, Button } from 'react-bootstrap';
 import { useState } from 'react';
 
 function DataTable() {
-  const [name, setName] = useState([]);
-  const [address, setAddress] = useState([]);
-  const [city, setCity] = useState([]);
-  const [state, setState] = useState([]);
-  const [postal_code, setPostalCode] = useState([]);
-  const [stars, setStars] = useState([]);
-  const [review_count, setReviewCount] = useState([]);
-  const [categories, setCategories] = useState([[]]);
+  // const [name, setName] = useState([]);
+  // const [address, setAddress] = useState([]);
+  // const [city, setCity] = useState([]);
+  // const [state, setState] = useState([]);
+  // const [postal_code, setPostalCode] = useState([]);
+  // const [stars, setStars] = useState([]);
+  // const [review_count, setReviewCount] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [show, setShow] = useState(false);
+  const [data,setData] = useState([]);
 
   const handleShow = () => {
     setShow(!show);
@@ -31,18 +32,11 @@ function DataTable() {
       }
   
       const data = await response.json();
-  console.log(typeof(data))
-        // If data is an object with properties, handle it accordingly
-        setName(data.name);
-        setAddress(data.address);
-        setCity(data.city);
-        setState(data.state);
-        setPostalCode(data.postal_code);
-        setStars(data.stars);
-        setReviewCount(data.review_count);
-        setCategories(data.categories);
+      const datalist = [];
 
         console.log(data);
+      setData(datalist);
+
    
       
     } catch (err) {
@@ -54,7 +48,7 @@ function DataTable() {
   return (
     <>
       <Container>
-        <Button onClick={handleShow}>Show Data</Button>
+        {!show ? <Button onClick={handleShow}>Show Data</Button>:null}
         {show ? (
           <Table>
             <thead>
@@ -70,17 +64,17 @@ function DataTable() {
               </tr>
             </thead>
             <tbody>
-              {name !== null
-                ? name.map((value, index) => (
+              {data !== null
+                ? data.map((value, index) => (
                     <tr key={index}>
                       <td>{value}</td>
-                      <td>{address[index]}</td>
+                      {/* {<td>{address[index]}</td>
                       <td>{city[index]}</td>
                       <td>{state[index]}</td>
                       <td>{postal_code[index]}</td>
                       <td>{stars[index]}</td>
                       <td>{review_count[index]}</td>
-                      <td>{categories[index]}</td>
+                      <td>{categories[index]}</td>} */}
                     </tr>
                   ))
                 : null}
