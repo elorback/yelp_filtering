@@ -1,18 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Table, Container, Button } from 'react-bootstrap';
-import { useState } from 'react';
 
 function DataTable() {
-  // const [name, setName] = useState([]);
-  // const [address, setAddress] = useState([]);
-  // const [city, setCity] = useState([]);
-  // const [state, setState] = useState([]);
-  // const [postal_code, setPostalCode] = useState([]);
-  // const [stars, setStars] = useState([]);
-  // const [review_count, setReviewCount] = useState([]);
-  // const [categories, setCategories] = useState([]);
   const [show, setShow] = useState(false);
-  const [data,setData] = useState([]);
+  const [yelpdata, setYelpData] = useState([]);
 
   const handleShow = () => {
     setShow(!show);
@@ -21,10 +12,7 @@ function DataTable() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/fetchdata', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await fetch('http://localhost:8000/api/fetchdata');
   
       if (!response.ok) {
         console.log(response);
@@ -32,23 +20,18 @@ function DataTable() {
       }
   
       const data = await response.json();
-      const datalist = [];
-
-        console.log(data);
-      setData(datalist);
-
-   
-      
+      const converted = [...yelpdata,data.data]
+      console.log(converted[0])
+      setYelpData(converted[0]); // Corrected this line
     } catch (err) {
       console.error(err);
     }
   };
   
-
   return (
     <>
       <Container>
-        {!show ? <Button onClick={handleShow}>Show Data</Button>:null}
+        {!show ? <Button onClick={handleShow}>Show Data</Button> : null}
         {show ? (
           <Table>
             <thead>
@@ -64,17 +47,17 @@ function DataTable() {
               </tr>
             </thead>
             <tbody>
-              {data !== null
-                ? data.map((value, index) => (
+              {yelpdata !== null
+                ? yelpdata.map((data, index) => (
                     <tr key={index}>
-                      <td>{value}</td>
-                      {/* {<td>{address[index]}</td>
-                      <td>{city[index]}</td>
-                      <td>{state[index]}</td>
-                      <td>{postal_code[index]}</td>
-                      <td>{stars[index]}</td>
-                      <td>{review_count[index]}</td>
-                      <td>{categories[index]}</td>} */}
+                      <td>{data.name || ''}</td>
+                      <td>{data.address || ''}</td>
+                      <td>{data.city || ''}</td>
+                      <td>{data.state || ''}</td>
+                      <td>{data.postal_code || ''}</td>
+                      <td>{data.stars || ''}</td>
+                      <td>{data.review_count || ''}</td>
+                      <td>{data.categories || ''}</td>
                     </tr>
                   ))
                 : null}

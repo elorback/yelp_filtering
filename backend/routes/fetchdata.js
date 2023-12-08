@@ -3,16 +3,20 @@ const YelpModel = require('../models/YelpModel');
 
 const router = express.Router();
 
-router.get('/fetchdata', async (req,res)=>{
-try{
+router.get('/fetchdata', async (req, res) => {
+  try {
+    const page = 1;
+    const pageSize =  25;
 
-    const allData = await YelpModel.findAll();
-    res.send({data:allData});
+    const offset = (page - 1) * pageSize;
 
-}catch(err){
+    const allData = await YelpModel.findAll({ offset, limit: pageSize });
+
+    res.send({ data: allData });
+  } catch (err) {
     console.error(err);
     res.status(500).json("Internal Server Error");
-}
-
+  }
 });
+
 module.exports = router;
