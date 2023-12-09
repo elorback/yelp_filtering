@@ -13,6 +13,12 @@ function DataTable() {
   const showMore = () =>{
     fetchData();
   }
+  const clearTable = ()  =>{
+
+      setShow(false);
+      setYelpData([]);
+      setPage(2);
+  };
 
   const fetchData = async () => {
     try {
@@ -35,14 +41,22 @@ function DataTable() {
   
   return (
     <>
-      <Container>
-        {!show ? <Button onClick={handleShow}>Show Data</Button> : null}
-        {!show ? null:<Button onClick={showMore}>Show More Data</Button>}
-        {show ? (
+      <Container style={{justifyContent:'center', display:'flex',alignItems:'center'}}>
+        {!show ? 
+        <Button onClick={handleShow} 
+              style={{
+        justifyContent:'center',
+         display:'flex',
+         alignItems:'center', 
+         marginTop:'150px'}}
+         >Show Data</Button> : null}
+        {/* {!show ? null:<Button onClick={showMore}>Show More Data</Button>} */}
+        {show && yelpdata.length > 0? (
+          <div>
           <Table>
             <thead>
               <tr>
-                <th>Entry</th>
+                <th>Data Point</th>
                 <th>Name</th>
                 <th>Address</th>
                 <th>City</th>
@@ -71,6 +85,20 @@ function DataTable() {
                 : null}
             </tbody>
           </Table>
+
+          {yelpdata.length > 0 && (
+              <div style={
+                { 
+                 display: 'flex',
+                 justifyContent: 'space-between',
+                 marginTop: '10px' }
+                }>
+
+                  <Button onClick={showMore}>+ Show More</Button>
+                  <Button onClick={clearTable}>Clear Table</Button>
+              </div>
+          )}
+          </div>
         ) : null}
       </Container>
     </>
