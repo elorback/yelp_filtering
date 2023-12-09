@@ -4,15 +4,19 @@ import { Table, Container, Button } from 'react-bootstrap';
 function DataTable() {
   const [show, setShow] = useState(false);
   const [yelpdata, setYelpData] = useState([]);
+  const [page,setPage] = useState(2);
 
   const handleShow = () => {
     setShow(!show);
     fetchData();
   };
+  const showMore = () =>{
+    fetchData();
+  }
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/fetchdata');
+      const response = await fetch(`http://localhost:8000/api/fetchdata?page=${page}`);
   
       if (!response.ok) {
         console.log(response);
@@ -20,9 +24,10 @@ function DataTable() {
       }
   
       const data = await response.json();
-      const converted = [...yelpdata,data.data]
+      const converted = [data.data]
       console.log(converted[0])
-      setYelpData(converted[0]); // Corrected this line
+      setYelpData((prevdata) =>[...prevdata,...converted[0]]); // Corrected this line
+      setPage((prevPage)=>(prevPage + 1));
     } catch (err) {
       console.error(err);
     }
@@ -32,10 +37,12 @@ function DataTable() {
     <>
       <Container>
         {!show ? <Button onClick={handleShow}>Show Data</Button> : null}
+        {!show ? null:<Button onClick={showMore}>Show More Data</Button>}
         {show ? (
           <Table>
             <thead>
               <tr>
+                <th>Entry</th>
                 <th>Name</th>
                 <th>Address</th>
                 <th>City</th>
@@ -50,6 +57,7 @@ function DataTable() {
               {yelpdata !== null
                 ? yelpdata.map((data, index) => (
                     <tr key={index}>
+                      <td>{index+1}</td>
                       <td>{data.name || ''}</td>
                       <td>{data.address || ''}</td>
                       <td>{data.city || ''}</td>
