@@ -1,29 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Container, Button } from 'react-bootstrap';
 
 function DataTable() {
   const [show, setShow] = useState(false);
   const [yelpdata, setYelpData] = useState([]);
-  const [page,setPage] = useState(2);
+  const [page,setPage] = useState(1);
+  const [search,setSearch] = useState([]);
+  const [filterAttributes,setfilterAttributes] = useState({});
 
   const handleShow = () => {
     setShow(!show);
     fetchData();
   };
-  const showMore = () =>{
+  const filterData = () =>{
     fetchData();
   }
   const clearTable = ()  =>{
 
       setShow(false);
       setYelpData([]);
-      setPage(2);
+      setPage(1);
   };
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/fetchdata?page=${page}`);
-  
+   
+      const queryString = {
+        search: search,
+        page: page,
+        ...filterAttributes,
+      };
+
+
+        console.log(queryString);
+   
+
+      const response = await fetch(`http://localhost:8000/api/filterdata?page=${page}&&?search=${search}`);
+
       if (!response.ok) {
         console.log(response);
         throw new Error("Can't get data from the database...");
@@ -33,12 +46,13 @@ function DataTable() {
       const converted = [data.data]
       console.log(converted[0])
       setYelpData((prevdata) =>[...prevdata,...converted[0]]); // Corrected this line
-      setPage((prevPage)=>(prevPage + 1));
+      setPage((prevPage) => prevPage + 1);
+      console.log(page);
     } catch (err) {
       console.error(err);
     }
   };
-  
+ 
   return (
     <>
       <Container style={{justifyContent:'center', display:'flex',alignItems:'center'}}>
@@ -50,7 +64,6 @@ function DataTable() {
          alignItems:'center', 
          marginTop:'150px'}}
          >Show Data</Button> : null}
-        {/* {!show ? null:<Button onClick={showMore}>Show More Data</Button>} */}
         {show && yelpdata.length > 0? (
           <div>
           <Table>
@@ -94,7 +107,7 @@ function DataTable() {
                  marginTop: '10px' }
                 }>
 
-                  <Button onClick={showMore}>+ Show More</Button>
+                  <Button onClick={fetchData}>+ Show More</Button>
                   <Button onClick={clearTable}>Clear Table</Button>
               </div>
           )}

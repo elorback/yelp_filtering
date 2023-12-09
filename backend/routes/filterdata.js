@@ -7,15 +7,17 @@ const ITEMS_PER_PAGE = 25; // Adjust this value based on your pagination needs
 
 router.get('/filterdata', async (req, res) => {
   try {
-    const {search,...filterAttributes} = req.query;
+    const {search,page, ...filterAttributes} = req.query;
     const whereClause = {
       [Op.and]: [],
     };
-    const page = req.query.page || 1; // Get the page from the query parameters
 
+    console.log(req.query);
     const offset = (page - 1) * ITEMS_PER_PAGE;
+    console.log('Page:',page,' search: ',search);
 
-    // Build the whereClause based on the provided parameters
+    // checks to filter what attributes to filter for, and checks
+    // if specified category exists within category list
     Object.entries(filterAttributes).forEach(([key, value]) => {
       // Check if the value is not empty or null
       if (value !== '' && value !== null) {
@@ -24,14 +26,13 @@ router.get('/filterdata', async (req, res) => {
         whereClause[Op.and].push(condition);
       }
     });
+    //below are filters for this table
     if(search){
       whereClause[Op.and].push({
         [Op.or] : [
           {name: {[Op.like]:`%${search}`}},
-          {address: {[Op.like]:`%${search}`}},
           {city: {[Op.like]:`%${search}`}},
           {state: {[Op.like]:`%${search}`}},
-          {postal_code: {[Op.like]:`%${search}`}},
           {stars: {[Op.like]:`%${search}`}},
           {review_count: {[Op.like]:`%${search}`}},
     
@@ -41,7 +42,7 @@ router.get('/filterdata', async (req, res) => {
 
     const filteredData = await YelpModel.findAll({
       limit: ITEMS_PER_PAGE,
-      offset: offset,
+      offset,
       where: whereClause,
     });
 
