@@ -7,37 +7,32 @@ const ITEMS_PER_PAGE = 25; // Adjust this value based on your pagination needs
 
 router.get('/filterdata', async (req, res) => {
   try {
-    const {search,page, ...filterAttributes} = req.query;
+    const { page, categories, ...search } = req.query;
     const whereClause = {
       [Op.and]: [],
     };
 
-    console.log(req.query);
     const offset = (page - 1) * ITEMS_PER_PAGE;
-    console.log('Page:',page,' search: ',search);
+    console.log("Search: ", search);
 
-    // checks to filter what attributes to filter for, and checks
-    // if specified category exists within category list
-    Object.entries(filterAttributes).forEach(([key, value]) => {
-      // Check if the value is not empty or null
-      if (value !== '' && value !== null) {
-        // If the key is 'categories', use the $in operator
-        const condition = key === 'categories' ? { [key]: { [Op.in]: value.split(',') } } : { [key]: value };
+    if (categories && categories !== '') {
+      // If categories exist and are not empty, use the $in operator
+      whereClause[Op.and].push({
+        categories: { [Op.in]: categories.split(',') },
+      });
+    }
+    
+     // Below are filters for this table
+     for (const [key, value] of Object.entries(search)) {
+      if (value !== 'null' && value !== null && value !== '') {
+        // Modify condition to handle stars and review_count
+        const condition = key === 'stars' || key === 'review_count'
+          ? { [key]: { [Op.gte]: parseFloat(value) } } // Use Op.gte for stars and review_count
+          : { [key]: { [Op.like]: `%${value}` } }; // Use Op.like for other attributes
+          
         whereClause[Op.and].push(condition);
       }
-    });
-    //below are filters for this table
-    if(search){
-      whereClause[Op.and].push({
-        [Op.or] : [
-          {name: {[Op.like]:`%${search}`}},
-          {city: {[Op.like]:`%${search}`}},
-          {state: {[Op.like]:`%${search}`}},
-          {stars: {[Op.like]:`%${search}`}},
-          {review_count: {[Op.like]:`%${search}`}},
-    
-        ]
-      })
+      console.log([key, value]);
     }
 
     const filteredData = await YelpModel.findAll({

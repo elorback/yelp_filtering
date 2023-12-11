@@ -5,8 +5,12 @@ function DataTable() {
   const [show, setShow] = useState(false);
   const [yelpdata, setYelpData] = useState([]);
   const [page,setPage] = useState(1);
-  const [search,setSearch] = useState([]);
-  const [filterAttributes,setfilterAttributes] = useState({});
+  const [name,setName] = useState('');
+  const [city,setCity] = useState('');
+  const [state,setState] = useState('UT');
+  const [stars,setStars] = useState(null);
+  const [review_count,setReview_count] = useState(null);
+  const [categories,setCategories] = useState('');
 
   const handleShow = () => {
     setShow(!show);
@@ -25,17 +29,25 @@ function DataTable() {
   const fetchData = async () => {
     try {
    
-      const queryString = {
-        search: search,
+      const queryParams = {
+        name: name,
+        city: city,
+        state: state,
+        stars: stars,
+        review_count: review_count,
         page: page,
-        ...filterAttributes,
+        categories: categories,
       };
+      
 
+       
 
-        console.log(queryString);
-   
+        // Create the final query string
+        const queryString = new URLSearchParams(queryParams).toString();
 
-      const response = await fetch(`http://localhost:8000/api/filterdata?page=${page}&&?search=${search}`);
+console.log(queryString);
+
+        const response = await fetch(`http://localhost:8000/api/filterdata?${queryString}`);
 
       if (!response.ok) {
         console.log(response);
@@ -47,7 +59,7 @@ function DataTable() {
       console.log(converted[0])
       setYelpData((prevdata) =>[...prevdata,...converted[0]]); // Corrected this line
       setPage((prevPage) => prevPage + 1);
-      console.log(page);
+      
     } catch (err) {
       console.error(err);
     }
