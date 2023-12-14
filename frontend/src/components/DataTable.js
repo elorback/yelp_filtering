@@ -11,7 +11,6 @@
     const [stars,setStars] = useState('');
     const [review_count,setReview_count] = useState('');
     const [postal_code,setPostal_code] = useState('');
-    const [categories,setCategories] = useState('');
 
     const handleShow = () => {
       setShow(!show);
@@ -38,7 +37,6 @@
           review_count: review_count,
           postal_code:postal_code,
           page: page,
-          categories: categories,
         };
         
 
