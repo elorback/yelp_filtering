@@ -14,26 +14,36 @@ router.get('/filterdata', async (req, res) => {
 
     const offset = (page - 1) * ITEMS_PER_PAGE;
     console.log("Search: ", search);
-
-    if (categories && categories !== '') {
+    if (categories && categories.length > 0) {
       // If categories exist and are not empty, use the $in operator
-      whereClause[Op.and].push({
-        categories: { [Op.in]: categories.split(',') },
-      });
+    
+      const categoryList = categories.split(',');
+    
+      for (const val of categoryList) {
+        console.log(val);
+        whereClause[Op.and].push({
+          categories: { [Op.in]: [val] },
+        });
+      }
     }
     
-     // Below are filters for this table
-     for (const [key, value] of Object.entries(search)) {
-      if (value !== 'null' && value !== null && value !== '') {
-        // Modify condition to handle stars and review_count
-        const condition = key === 'stars' || key === 'review_count'
-          ? { [key]: { [Op.gte]: parseFloat(value) } } // Use Op.gte for stars and review_count
-          : { [key]: { [Op.like]: `%${value}` } }; // Use Op.like for other attributes
+    
+    console.log(categories.split(','));
+    // Below are filters for this table
+for (const [key, value] of Object.entries(search)) {
+  if (value !== 'null' && value !== null && value !== '') {
+   // Modify condition to handle stars, review_count, and categories
+const condition = key === 'stars' || key === 'review_count'
+  ? { [key]: { [Op.gte]: parseFloat(value) } } // Use Op.gte for stars and review_count
+  : key === 'categories'
+  ? { [key]: { [Op.iLike]: `%${value}%` } } // Use Op.iLike for case-insensitive category search
+  : { [key]: { [Op.like]: `%${value}` } }; // Use Op.like for other attributes
+
           
-        whereClause[Op.and].push(condition);
-      }
-      console.log([key, value]);
-    }
+    whereClause[Op.and].push(condition);
+  }
+}
+
 
     const filteredData = await YelpModel.findAll({
       limit: ITEMS_PER_PAGE,

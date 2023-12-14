@@ -41,7 +41,7 @@ const YelpModel = sequelize.define('YelpModel', {
     allowNull: true,
   },
   review_count: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: true,
   },
   is_open: {
