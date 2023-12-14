@@ -14,21 +14,7 @@ router.get('/filterdata', async (req, res) => {
 
     const offset = (page - 1) * ITEMS_PER_PAGE;
     console.log("Search: ", search);
-    if (categories && categories.length > 0) {
-      // If categories exist and are not empty, use the $in operator
-    
-      const categoryList = categories.split(',');
-    
-      for (const val of categoryList) {
-        console.log(val);
-        whereClause[Op.and].push({
-          categories: { [Op.in]: [val] },
-        });
-      }
-    }
-    
-    
-    console.log(categories.split(','));
+  
     // Below are filters for this table
 for (const [key, value] of Object.entries(search)) {
   if (value !== 'null' && value !== null && value !== '') {
