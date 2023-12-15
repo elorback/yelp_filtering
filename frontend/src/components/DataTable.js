@@ -46,10 +46,7 @@ function DataTable() {
     setReview_count('');
     
   };
-  const handleShow = () => {
-    setShow(true);
-    fetchFilterData();
-  };
+
 
   const clearTable = () => {
     setShow(false);
@@ -123,18 +120,13 @@ function DataTable() {
 
   return (
     <Container style={{ marginTop: '50px', marginBottom: '50px' }}>
-      {!show ? (
-        <Button
-          onClick={handleShow}
-          style={{
+      <Button onClick={clearTable} style={{
             justifyContent: 'center',
+            alignContent:'center',
+            marginBottom:'10px',
             display: 'flex',
-          }}
-        >
-          Show Data
-        </Button>
-        
-      ) : null}
+          }}>Clear Table</Button>
+
       {!show && (
         <Form onSubmit={handleSubmit}>
 
@@ -228,7 +220,7 @@ function DataTable() {
           </Row>
           <div style={{marginTop:'10px',justifyContent:'space-between',display:'flex'}}>
           <Button variant="primary" type="submit">
-            Filter
+            Search
           </Button>
           <Button onClick={clearFilters}>Clear Filters</Button>
           </div>
@@ -252,7 +244,7 @@ function DataTable() {
               </tr>
             </thead>
             <tbody>
-              {yelpdata !== null
+              {yelpdata.length > 0
                 ? yelpdata.map((data, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
@@ -266,7 +258,8 @@ function DataTable() {
                       <td>{data.categories || ''}</td>
                     </tr>
                   ))
-                : null}
+                : null
+              }
             </tbody>
           </Table>
           {yelpdata.length > 0 && (
@@ -278,11 +271,11 @@ function DataTable() {
               }}
             >
               <Button onClick={fetchFilterData}>+ Show More</Button>
-              <Button onClick={clearTable}>Clear Table</Button>
             </div>
           )}
         </div>
-      ) : null}
+      ) : null
+    }
     </Container>
   );
 }
