@@ -12,6 +12,7 @@ function DataTable() {
   const [review_count, setReview_count] = useState('');
   const [postal_code, setPostal_code] = useState('');
   const [statesList, setStatesList] = useState([]);
+  const [searchall, setSearchall] = useState(true);
 
   const starlist = [1, 2, 3, 4, 5];
 
@@ -44,8 +45,11 @@ function DataTable() {
     setState('');
     setPostal_code('');
     setReview_count('');
+    setSearchall(true);
     
   };
+
+
 
 
   const clearTable = () => {
@@ -87,6 +91,7 @@ function DataTable() {
 
   const handleFilterChange = (event) => {
     setShow(false);
+    setSearchall(false);
     const { name, value } = event.target;
     switch (name) {
       case 'name':
@@ -219,9 +224,11 @@ function DataTable() {
             </Col>
           </Row>
           <div style={{marginTop:'10px',justifyContent:'space-between',display:'flex'}}>
-          <Button variant="primary" type="submit">
+         {searchall ?  <Button variant="primary" type="submit">
+            Search All
+          </Button>: <Button variant="primary" type="submit">
             Search
-          </Button>
+          </Button>}
           <Button onClick={clearFilters}>Clear Filters</Button>
           </div>
         </Form>
