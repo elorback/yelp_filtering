@@ -14,7 +14,7 @@ function DataTable() {
   const [statesList, setStatesList] = useState([]);
   const [searchall, setSearchall] = useState(true);
 
-  const starlist = [1, 2, 3, 4, 5];
+  const [starlist,setStarlist] = useState([]);
 
   useEffect(() => {
     // Fetch states, cities, and postal codes from the backend
@@ -25,10 +25,13 @@ function DataTable() {
           throw new Error("Can't get data from the database...");
         }
         const data = await response.json();
-        const stateList = data.data.map((item) => item.state);
-        console.log(stateList);
+        const stateList = data.states.map((item) => item.state);
+        const starList = data.stars.map((item) => item.stars);
+
+        console.log(stateList,starList);
         
         setStatesList(stateList.sort());
+        setStarlist(starList.sort());
       } catch (error) {
         console.error(error);
       }
@@ -77,10 +80,11 @@ function DataTable() {
         console.log(response);
         throw new Error("Can't get data from the database...");
       }
-
       const data = await response.json();
       const converted = [data.data];
-
+      
+      console.log(data)
+      
       console.log(converted);
       setYelpData((prevdata) => [...prevdata, ...converted[0]]);
       setPage((prevPage) => prevPage + 1);
