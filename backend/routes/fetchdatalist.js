@@ -15,13 +15,18 @@ router.get('/fetchdatalist', async (req, res) => {
       raw: true,
     });
 
-    console.log(uniqueStates);
-
+    const uniqueStars = await YelpModel.findAll({
+      attributes: [
+        [Sequelize.fn('DISTINCT', Sequelize.col('stars')), 'stars']
+      ],
+      raw: true,
+    });
+    console.log("unique states: ",uniqueStates, '\n unique stars', uniqueStars);
 
     
 
     res.send({
-      data: uniqueStates
+      data:{uniqueStates,uniqueStars}
     });
   } catch (err) {
     console.error(err);

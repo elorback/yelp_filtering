@@ -25,11 +25,9 @@ function DataTable() {
           throw new Error("Can't get data from the database...");
         }
         const data = await response.json();
-        const stateList = data.states.map((item) => item.state);
-        const starList = data.stars.map((item) => item.stars);
-
-        console.log(stateList,starList);
-        
+        const stateList = data.data.uniqueStates.map(item=>(item.state));
+        const starList = data.data.uniqueStars.map(item=>(item.stars));
+  
         setStatesList(stateList.sort());
         setStarlist(starList.sort());
       } catch (error) {
@@ -220,7 +218,7 @@ function DataTable() {
                 <Form.Control
                   type="text"
                   placeholder="Zip Code"
-                  name="Postal Code"
+                  name="postal_code"
                   value={postal_code}
                   onChange={handleFilterChange}
                 />
