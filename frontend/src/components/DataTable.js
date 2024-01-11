@@ -17,7 +17,8 @@ function DataTable() {
   const [starlist,setStarlist] = useState([]);
 
   useEffect(() => {
-    // Fetch states, cities, and postal codes from the backend
+    // Fetch a list of all states and star ratings that will be shown
+    // as a drop down list
     const fetchDataList = async () => {
       try {
         const response = await fetch('http://localhost:8000/api/fetchdatalist');
@@ -25,9 +26,11 @@ function DataTable() {
           throw new Error("Can't get data from the database...");
         }
         const data = await response.json();
-        const stateList = data.data.uniqueStates.map(item=>(item.state));
-        const starList = data.data.uniqueStars.map(item=>(item.stars));
-  
+        const stateList = data.data.map((item) => item.state);
+        const starList = data.stars.map((item) => item.stars);
+
+        console.log(stateList,starList);
+        
         setStatesList(stateList.sort());
         setStarlist(starList.sort());
       } catch (error) {
@@ -39,6 +42,7 @@ function DataTable() {
     fetchDataList();
   }, []); // Empty dependency array means this effect runs once when the component mounts
 
+  //clears all filters previously set
   const clearFilters = () =>{
     setCity('');
     setName('');
@@ -51,7 +55,7 @@ function DataTable() {
   };
 
 
-
+//clears the table while preserving the current filters set
 
   const clearTable = () => {
     setShow(false);
@@ -59,6 +63,7 @@ function DataTable() {
     setPage(1);
   };
 
+  // filters the data based on set search parameters
   const fetchFilterData = async () => {
     try {
       const queryParams = {
@@ -91,6 +96,7 @@ function DataTable() {
     }
   };
 
+  // handle function which is run every time a user interacts with a field
   const handleFilterChange = (event) => {
     setShow(false);
     setSearchall(false);
@@ -218,7 +224,7 @@ function DataTable() {
                 <Form.Control
                   type="text"
                   placeholder="Zip Code"
-                  name="postal_code"
+                  name="Postal Code"
                   value={postal_code}
                   onChange={handleFilterChange}
                 />
