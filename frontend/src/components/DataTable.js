@@ -26,10 +26,12 @@ function DataTable() {
           throw new Error("Can't get data from the database...");
         }
         const data = await response.json();
-        const stateList = data.data.map((item) => item.state);
-        const starList = data.stars.map((item) => item.stars);
+        const states = data.data.uniqueStates;         
+        const stars = data.data.uniqueStars;
+          
+         const stateList = states.map((item) => item.state);
+         const starList = stars.map((item) => item.stars);
 
-        console.log(stateList,starList);
         
         setStatesList(stateList.sort());
         setStarlist(starList.sort());
